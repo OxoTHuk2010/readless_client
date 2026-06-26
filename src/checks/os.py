@@ -1,5 +1,6 @@
 from pathlib import Path
-from config.agent import AgentConfig 
+
+from src.config.agent import AgentConfig
 
 
 def read_os_release(file_path: Path = AgentConfig.OS_RELEASE_FILE) -> dict[str, str]:
@@ -34,4 +35,15 @@ def read_os_release(file_path: Path = AgentConfig.OS_RELEASE_FILE) -> dict[str, 
             os_info[key] = value
 
     return os_info
+
+
+def check_os_release(file_path: Path = AgentConfig.OS_RELEASE_FILE) -> dict[str, str]:
+    """
+    Возвращает сведения об ОС для основного сценария сбора.
+
+    Обёртка оставлена отдельно от parser-функции, чтобы дальнейшие проверки
+    могли добавлять обработку ошибок, статусы сбора и диагностику.
+    """
+
+    return read_os_release(file_path)
 

@@ -1,32 +1,39 @@
-from config.agent import AgentConfig
-from pathlib import Path
-import tempfile
 import os
+import tempfile
+from pathlib import Path
 
-def write_metric_atomic(metric_content:str = None, file_path:Path = AgentConfig.EXPORTER_TEXTFILE_FILE) -> None:
+from src.config.agent import AgentConfig
+
+
+def write_metric_atomic(
+    metric_content: str,
+    file_path: Path = AgentConfig.EXPORTER_TEXTFILE_FILE,
+) -> None:
     """
     Записывает метрику в файл атомарно
     """
 
+    target_path = Path(file_path)
+    target_path.parent.mkdir(parents=True, exist_ok=True)
     file_descriptor, temporary_file = tempfile.mkstemp(
         prefix=".os_release_",
         suffix=".prom",
-        dir=AgentConfig.EXPORTER_TEXTFILE_DIR,
+        dir=target_path.parent,
         text=True,
     )
+    temporary_path = Path(temporary_file)
 
     try:
         with os.fdopen(
             file_descriptor,
             "w",
             encoding="utf-8",
-            ) as f:
+        ) as f:
             f.write(metric_content)
             f.flush()
             os.fsync(f.fileno())
 
-        os.replace(temporary_file, file_path)
-    except Exception as e:
-        print(e)
+        os.replace(temporary_path, target_path)
     finally:
-        os.remove(temporary_file)
+        if temporary_path.exists():
+            temporary_path.unlink()

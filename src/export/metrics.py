@@ -1,5 +1,4 @@
-
-def escape_prometheus_label(value:str) -> str:
+def escape_prometheus_label(value: str) -> str:
     """
     Экранирует строку для использования
     в label метрики Prometheus
@@ -12,7 +11,7 @@ def escape_prometheus_label(value:str) -> str:
         .replace('"', '\\"')
     )
 
-def build_prometheus_metric(os_info:dict[str:str]) -> str:
+def build_prometheus_metric(os_info: dict[str, str]) -> str:
     """Формирует метрику для OS_INFO в формате Prometheus"""
 
     labels = {
