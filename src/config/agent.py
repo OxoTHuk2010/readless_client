@@ -8,7 +8,7 @@ class AgentConfig:
     """
 
     OS_RELEASE_FILE = Path("/etc/os-release")
-    EXPORTER_TEXTFILE_DIR = "/var/lib/node_exporter/"
+    EXPORTER_TEXTFILE_DIR = "/etc/node_exporter/"
     EXPORTER_TEXTFILE_FILE = Path(
         os.path.join(
         EXPORTER_TEXTFILE_DIR,
