@@ -24,6 +24,9 @@ def write_metric_atomic(
     temporary_path = Path(temporary_file)
 
     try:
+        #устанавливаем права на временный файл
+        os.fchmod(file_descriptor, 0o644)
+        
         with os.fdopen(
             file_descriptor,
             "w",
