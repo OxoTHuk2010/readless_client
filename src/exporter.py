@@ -4,6 +4,8 @@ from src.metrics.writer import write_metric_atomic
 
 
 def main() -> None:
+    """Выполняет один цикл сбора ОС и публикации textfile-метрики."""
+
     os_info = check_os_release()
     metric = build_prometheus_metric(os_info)
     write_metric_atomic(metric)

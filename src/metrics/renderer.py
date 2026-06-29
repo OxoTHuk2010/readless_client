@@ -1,7 +1,9 @@
 def escape_prometheus_label(value: str) -> str:
     """
-    Экранирует строку для использования
-    в label метрики Prometheus
+    Экранирует строку для безопасного использования в label Prometheus.
+
+    Prometheus требует экранировать обратный слеш, перевод строки и двойную
+    кавычку внутри label value.
     """
 
     return (
@@ -12,7 +14,15 @@ def escape_prometheus_label(value: str) -> str:
     )
 
 def build_prometheus_metric(os_info: dict[str, str]) -> str:
-    """Формирует метрику для OS_INFO в формате Prometheus"""
+    """
+    Формирует минимальную info-метрику по данным `/etc/os-release`.
+
+    Args:
+        os_info: Словарь, полученный из `read_os_release`.
+
+    Returns:
+        Строка в формате Prometheus text exposition.
+    """
 
     labels = {
         "id": os_info.get("ID", "unknown"),

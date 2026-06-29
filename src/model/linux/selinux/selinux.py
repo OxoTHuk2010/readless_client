@@ -2,7 +2,8 @@ from src.model.linux.base import ConfigModel
 from typing import Literal
 
 class SelinuxRule(ConfigModel):
-    """Модель параметров Selinux"""
+    """Ожидаемый runtime-режим SELinux на ВМ."""
+
     state: Literal[
         "disabled",
         "enforcing",

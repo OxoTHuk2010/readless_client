@@ -5,8 +5,13 @@ from src.config.agent import AgentConfig
 
 def read_os_release(file_path: Path = AgentConfig.OS_RELEASE_FILE) -> dict[str, str]:
     """
-    Читает файл OS_RELEASE_FILE и возвращает его содержимое
-    в виде словаря.
+    Читает `/etc/os-release` и возвращает пары `KEY=VALUE` в виде словаря.
+
+    Args:
+        file_path: Путь к файлу формата os-release.
+
+    Returns:
+        Словарь с ключами из файла os-release.
     """
 
     os_info: dict[str, str] = {}
@@ -15,11 +20,11 @@ def read_os_release(file_path: Path = AgentConfig.OS_RELEASE_FILE) -> dict[str, 
         for line in f:
             line = line.strip()
 
-            # Пропускаем пустые строки и коментарии
+            # Пустые строки и комментарии не являются фактами ОС.
             if not line or line.startswith("#"):
                 continue
             
-            # Разделяем строку только по первому символу =
+            # Значения вроде URL могут содержать "=" после первого разделителя.
             key, separator, value = line.partition("=")
 
             if not separator:
@@ -30,6 +35,8 @@ def read_os_release(file_path: Path = AgentConfig.OS_RELEASE_FILE) -> dict[str, 
                 and value[0] == value[-1]
                 and value[0] in ('"', "'")
             ):
+                # os-release обычно хранит значения в кавычках; в метрики и
+                # проверки передаём уже нормализованное значение.
                 value = value[1:-1]
 
             os_info[key] = value

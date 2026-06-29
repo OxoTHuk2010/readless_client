@@ -5,12 +5,17 @@ from src.model.linux.selinux.services import ServicesRule
 from src.model.linux.selinux.kernel_modules import KernelModuleRule
 
 class LinuxConfig(ConfigModel):
+    """Набор правил, которые описывают ожидаемое состояние Linux-хоста."""
+
     selinux: SelinuxRule | None = None
+    """Ожидаемый режим SELinux; `None` означает, что проверка не задана."""
 
     services: list[ServicesRule] = Field(
         default_factory=list
     )
+    """Ожидания по systemd-сервисам в рамках текущего профиля проверки."""
 
     kernel_modules: list[KernelModuleRule] = Field(
         default_factory=list
     )
+    """Ожидания по загруженным или отсутствующим kernel modules."""

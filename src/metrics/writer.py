@@ -10,7 +10,12 @@ def write_metric_atomic(
     file_path: Path = AgentConfig.EXPORTER_TEXTFILE_FILE,
 ) -> None:
     """
-    Записывает метрику в файл атомарно
+    Атомарно записывает Prometheus textfile-метрику.
+
+    Safety boundary:
+    функция меняет состояние файловой системы. Она пишет только в переданный
+    `file_path` и использует временный файл в том же каталоге, чтобы
+    `node_exporter` не прочитал частично записанный файл.
     """
 
     target_path = Path(file_path)
@@ -24,8 +29,11 @@ def write_metric_atomic(
     temporary_path = Path(temporary_file)
 
     try:
-        #устанавливаем права на временный файл
-        os.fchmod(file_descriptor, 0o644)
+        # На Linux временный файл должен быть читаем `node_exporter` после
+        # replace. В Windows `fchmod` отсутствует, поэтому локальные тесты
+        # пропускают этот POSIX-only шаг.
+        if hasattr(os, "fchmod"):
+            os.fchmod(file_descriptor, 0o644)
         
         with os.fdopen(
             file_descriptor,
@@ -36,6 +44,7 @@ def write_metric_atomic(
             f.flush()
             os.fsync(f.fileno())
 
+        # replace атомарен внутри одной файловой системы.
         os.replace(temporary_path, target_path)
     finally:
         if temporary_path.exists():
