@@ -1,4 +1,4 @@
-from src.export.metrics import build_prometheus_metric, escape_prometheus_label
+from src.metrics.renderer import build_prometheus_metric, escape_prometheus_label
 
 
 def test_escape_prometheus_label() -> None:

@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from src.writer.writer import write_metric_atomic
+from src.metrics.writer import write_metric_atomic
 
 
 def test_write_metric_atomic_creates_file(metric_file: Path) -> None:

@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from src.checks.os import read_os_release
+from src.collectors.os import read_os_release
 
 def test_read_os_release(
         os_release_file: Path,

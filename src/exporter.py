@@ -1,6 +1,6 @@
-from src.checks.os import check_os_release
-from src.export.metrics import build_prometheus_metric
-from src.writer.writer import write_metric_atomic
+from src.collectors.os import check_os_release
+from src.metrics.renderer import build_prometheus_metric
+from src.metrics.writer import write_metric_atomic
 
 
 def main() -> None:
