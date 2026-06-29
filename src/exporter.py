@@ -2,9 +2,20 @@ from src.collectors.os import check_os_release
 from src.metrics.renderer import build_prometheus_metric
 from src.metrics.writer import write_metric_atomic
 
+from src.config.loader import ConfigurationError, load_config
+from src.config.agent import AgentConfig
+
 
 def main() -> None:
     """Выполняет один цикл сбора ОС и публикации textfile-метрики."""
+
+    try:
+        config = load_config(AgentConfig.PROFILE_FILE)
+    
+    except ConfigurationError as e:
+        print(f"Ошибка загрузки конфигурации: {e}")
+
+
 
     os_info = check_os_release()
     metric = build_prometheus_metric(os_info)

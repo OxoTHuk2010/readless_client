@@ -1,4 +1,5 @@
-from pydantic import Field
+from typing import Any
+from pydantic import Field, field_validator
 from src.model.linux.base import ConfigModel
 from src.model.linux.selinux.selinux import SelinuxRule
 from src.model.linux.selinux.services import ServicesRule
@@ -19,3 +20,12 @@ class LinuxConfig(ConfigModel):
         default_factory=list
     )
     """Ожидания по загруженным или отсутствующим kernel modules."""
+
+    @field_validator("services", "kernel_modules", mode="before")
+    @classmethod
+    def normalize_rule_list(cls, value: Any) -> Any:
+        if value is None:
+            return []
+        if isinstance(value, dict):
+            return [value]
+        return value

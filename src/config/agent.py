@@ -18,3 +18,4 @@ class AgentConfig:
         "os_release.prom",
         )
     )
+    PROFILE_FILE = Path("profile/baseline.yaml")
