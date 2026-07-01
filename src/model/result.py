@@ -10,8 +10,8 @@ class CheckStatus(str, Enum):
 @dataclass(frozen=True)
 class CheckResult:
     checker: str
-    target: str
-    property: str
+    target: str | None
+    property: str | None
     expected: Any
     actual: Any | None
     status: CheckStatus

@@ -4,22 +4,13 @@ import yaml
 from pydantic import ValidationError
 
 from src.model.linux.state import StateConfig
+from src.utils.validate_path import validate_path_file
 
 class ConfigurationError(RuntimeError):
     pass
 
 def load_config(path:str | Path) -> StateConfig:
-    config_path = Path(path)
-
-    if not config_path.exists():
-        raise ConfigurationError(
-            f"Файл не найден: {config_path}"
-        )
-
-    if not config_path.is_file():
-        raise ConfigurationError(
-            f"Файл не найден"
-        )
+    config_path = validate_path_file(path)
     
     try:
         with config_path.open("r", encoding="utf-8") as file:
